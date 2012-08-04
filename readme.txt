@@ -14,8 +14,9 @@ this plugin lets users put images in a comment.
 This plugin lets users put images in comments. The user can upload the image through the comment form to your server and choose a easy name for it.
 Then it puts the [afbeelding=<name>] tag in the comment and the image will appear!
 This first version only gives the basic features, many more are to come in the upcoming updates!
-<b>warning: due to technical reasons the tag to use in the comments is currently only avaible in dutch, so you need to use [afbeelding=<name>] for the moment.
-this will be fixed as soon as possible in future updates</b>
+
+warning: due to technical reasons the tag to use in the comments is currently only avaible in dutch, so you need to use [afbeelding=insert choosen image name here] for the moment.
+this will be fixed as soon as possible in future updates
 
 <u><b>upcoming updates:<b></u>
 <ul>
@@ -57,6 +58,10 @@ image and commments put together = imagements
 = I have found a bug/have a problem with the plugin, what should i do? =
 
 email me at williewonka341@gmail.com and i wil try to fix it as soon as possible
+
+= how do I use this plugin? =
+
+a user has to tick the checkbox in the comment form and choose a name for the image and choose a file. i can then use the tag [afbeelding=insert choosen image name here] in the comment. The plugin will automaticly insert the proper image html tag in the comment.
 
 == Screenshots ==
 
