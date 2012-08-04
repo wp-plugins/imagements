@@ -1,6 +1,6 @@
 === Imagements ===
-Contributors: dc5ala
-Tags: image, in, comments
+Contributors: williewonka, dc5ala
+Tags: image, in, comments, images, comment
 Requires at least: 3.4.1
 Tested up to: 3.4.1
 Stable tag: 1.0.0
