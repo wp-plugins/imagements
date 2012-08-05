@@ -3,7 +3,7 @@
 /*
 Plugin Name: imagements
 Description: this plugin lets your users put images in comments.
-Version: 1.0.0
+Version: 1.1.0
 Author: williewonka
 Author URI: http://www.deweblogvanhelmond.nl
 License: GPL2
@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 register_activation_hook(__file__, "imagements_init");
-register_deactivation_hook(__file__, 'imagements_deactivate');
+register_deactivation_hook(__FILE__, 'imagements_deac');
 register_uninstall_hook(__file__, 'imagements_uninstall');
 add_action('wp_enqueue_scripts', 'imagement_add_form_tag');
 add_filter('comment_text', 'imagements_comment_check');
@@ -34,7 +34,12 @@ add_action('comment_form_logged_in_after', 'imagements_additional_fields');
 add_action('comment_form_after_fields', 'imagements_additional_fields');
 add_action('comment_post', 'imagements_formverwerking');
 add_filter('preprocess_comment', 'imagements_verify_post_data');
+add_action('admin_menu', 'imagements_admin_add_page');
+add_action('admin_init', 'imagements_admin_init');
+add_action('plugins_loaded', 'imagements_version_check');
 
+require __DIR__ . '\img_resize_function.php';
+require __DIR__ . '\options.php';
 
 function imagement_add_form_tag()
 {
@@ -43,18 +48,33 @@ function imagement_add_form_tag()
     wp_enqueue_script('add_form_tag', plugins_url('/js/form_tag.js', __file__));
 }
 
+function imagements_version_check(){
+    if(! (get_option('version') == '1.1.0') and ! (get_option('warning') == 'yes')){
+        add_option('warning', 'yes');
+        wp_die(__('imagements update detected, please deactivate the plugin and then reactivate it to update the database structure. refresh this page to let this warning disappear. it will not appear twice.'));
+    }
+}
+
+function imagements_deac(){
+    delete_option('version');
+}
+
 function imagements_formverwerking()
 {
     if (isset($_POST['checkbox']))
     {
-        $naam = $_FILES['image']['name'];
-        move_uploaded_file($_FILES["image"]["tmp_name"], __DIR__ .
-            '/images/' . $naam);
+        $name = $_FILES['image']['name'];
+        move_uploaded_file($_FILES["image"]["tmp_name"], __DIR__ . '/images/' . $name);
+        if (!imagements_resize_image(__DIR__ . '/images/' . $name, 0, 1, get_option('max_width'),
+            get_option('max_height')))
+        {
+            wp_die(__('error in resizing image, hit the back button and try again. <br> if problem persist contact site admin'));
+        }
         global $wpdb;
         $table_name = $wpdb->prefix . 'imagements';
         $sql = "INSERT INTO $table_name
         VALUES (NULL, '" . $wpdb->prepare($_POST['naam']) . "', '" . $wpdb->
-            prepare($_FILES['image']['name']) . "') 
+            prepare($_FILES['image']['name']) . "', 'no') 
         ";
         $wpdb->query($sql);
 
@@ -83,9 +103,8 @@ function imagements_verify_post_data($commentdata)
                 } else
                 {
                     if (!($_FILES['image']['type'] == 'image/x-png' || $_FILES['image']['type'] ==
-                        'image/pjpeg' || $_FILES['image']['type'] == 'image/bmp' || $_FILES['image']['type'] ==
-                        'image/jpeg' || $_FILES['image']['type'] == 'image/jpg' || $_FILES['image']['type'] ==
-                        'image/png'))
+                        'image/pjpeg' || $_FILES['image']['type'] == 'image/jpeg' || $_FILES['image']['type'] ==
+                        'image/jpg' || $_FILES['image']['type'] == 'image/png'))
                     {
                         wp_die(__('this file is no image. Hit the Back button on your Web browser and try again'));
                     } else
@@ -167,6 +186,11 @@ function imagements_comment_check($comment)
 
 function imagements_init()
 {
+    add_option('max_height', 300);
+    add_option('max_width', 300);
+    add_option('version', '1.1.0');
+    add_option('tag', 'afbeelding');
+    
     global $wpdb;
     $table_name = $wpdb->prefix . "imagements";
 
@@ -174,6 +198,7 @@ function imagements_init()
     id mediumint(9) NOT NULL AUTO_INCREMENT,
     naam text NOT NULL,
     path text NOT NULL,
+    blocked text NOT NULL,
     UNIQUE KEY id (id)
     );";
 
@@ -181,16 +206,14 @@ function imagements_init()
     dbDelta($sql);
 }
 
-function imagements_deactivate()
-{
-    delete_option('wp_imagements_1.0');
-}
 
 function imagements_uninstall()
 {
     global $wpdb;
     $table_name = $wpdb->prefix . "imagements";
     $wpdb->query("DROP TABLE IF EXISTS $table_name");
+    delete_option('max_height');
+    delete_option('max_width');
 }
 
 ?>
