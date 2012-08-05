@@ -38,8 +38,8 @@ add_action('admin_menu', 'imagements_admin_add_page');
 add_action('admin_init', 'imagements_admin_init');
 add_action('plugins_loaded', 'imagements_version_check');
 
-require __DIR__ . '\img_resize_function.php';
-require __DIR__ . '\options.php';
+require __DIR__ . '/img_resize_function.php';
+require __DIR__ . '/options.php';
 
 function imagement_add_form_tag()
 {
