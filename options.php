@@ -10,8 +10,10 @@
  
 function imagements_admin_init(){
 add_settings_section('imagements_main', 'imagements ', 'imagements_section_text', 'imagements');
+register_setting('imagements_options', 'tag');
 register_setting('imagements_options', 'max_width', 'imagements_options_validate' );
 register_setting('imagements_options', 'max_height', 'imagements_options_validate' );
+add_settings_field('tag', __('the tag used to insert an image: '), 'imagements_option_tag', 'imagements', 'imagements_main');
 add_settings_field('max_width', __('maximum width in pixels: '), 'imagements_option_width', 'imagements', 'imagements_main');
 add_settings_field('max_height', __('maximum height in pixels: '), 'imagements_option_height', 'imagements', 'imagements_main');
 }
@@ -35,6 +37,11 @@ function imagements_option_height(){
     $option = get_option('max_height');
     echo "<input id='max_height' name='max_height' size='40' type='text' value='$option' />";
     
+}
+
+function imagements_option_tag(){
+    $option = get_option('tag');
+    echo "<input id='tag' name='tag' size='40' type='text' value='$option' />";
 }
 
 function imagements_section_text(){

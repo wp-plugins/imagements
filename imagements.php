@@ -3,7 +3,7 @@
 /*
 Plugin Name: imagements
 Description: this plugin lets your users put images in comments.
-Version: 1.1.0
+Version: 1.2.0
 Author: williewonka
 Author URI: http://www.deweblogvanhelmond.nl
 License: GPL2
@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 register_activation_hook(__file__, "imagements_init");
-register_deactivation_hook(__FILE__, 'imagements_deac');
+register_deactivation_hook(__file__, 'imagements_deac');
 register_uninstall_hook(__file__, 'imagements_uninstall');
 add_action('wp_enqueue_scripts', 'imagement_add_form_tag');
 add_filter('comment_text', 'imagements_comment_check');
@@ -36,10 +36,41 @@ add_action('comment_post', 'imagements_formverwerking');
 add_filter('preprocess_comment', 'imagements_verify_post_data');
 add_action('admin_menu', 'imagements_admin_add_page');
 add_action('admin_init', 'imagements_admin_init');
-add_action('plugins_loaded', 'imagements_version_check');
+add_action('init', 'imagements_check_form_input');
 
-require __DIR__ . '\img_resize_function.php';
-require __DIR__ . '\options.php';
+require __DIR__ . '/img_resize_function.php';
+require __DIR__ . '/options.php';
+
+function imagements_check_form_input()
+{
+    if (isset($_POST['image_name']) && isset($_POST['comment_id']))
+    {
+
+        if (current_user_can('moderate_comments'))
+        {
+
+        } else
+        {
+            global $wpdb;
+            $table_name = $wpdb->prefix . "imagements_reports";
+            $sql = "
+            SELECT id
+            FROM $table_name
+            WHERE image_name='" . $wpdb->prepare($_POST['image_name']) . "'
+            ";
+            $result = $wpdb->get_var($sql);
+            if ($result == null)
+            {
+                $sql = "INSERT INTO $table_name
+        VALUES (NULL, '" . $wpdb->prepare($_POST['image_name']) . "', '" . $wpdb->
+                    prepare($_POST['comment_id']) . "'
+        );";
+                $wpdb->query($sql);
+                wp_die(__('image reported, an admin will look at the case as soon as possible'));
+            }
+        }
+    }
+}
 
 function imagement_add_form_tag()
 {
@@ -48,14 +79,8 @@ function imagement_add_form_tag()
     wp_enqueue_script('add_form_tag', plugins_url('/js/form_tag.js', __file__));
 }
 
-function imagements_version_check(){
-    if(! (get_option('version') == '1.1.0') and ! (get_option('warning') == 'yes')){
-        add_option('warning', 'yes');
-        wp_die(__('imagements update detected, please deactivate the plugin and then reactivate it to update the database structure. refresh this page to let this warning disappear. it will not appear twice.'));
-    }
-}
-
-function imagements_deac(){
+function imagements_deac()
+{
     delete_option('version');
 }
 
@@ -148,19 +173,22 @@ function imagements_additional_fields()
         '<input id="image" name="image" type="file"/></p>';
 }
 
-function imagements_comment_check($comment)
+function imagements_comment_check()
 {
 
     global $wpdb;
+    global $comment;
+
     $table_name = $wpdb->prefix . "imagements";
 
     $start = "[afbeelding=";
     $end = "]";
     $pos = 0;
+    $comment_content = $comment->comment_content;
 
-    while ($pos = stripos($comment, $start, $pos))
+    while ($pos = stripos($comment_content, $start, $pos))
     {
-        $str = substr($comment, $pos);
+        $str = substr($comment->comment_content, $pos);
         $str_two = substr($str, strlen($start));
         $second_pos = stripos($str_two, $end);
         $str_three = substr($str_two, 0, $second_pos);
@@ -178,19 +206,46 @@ function imagements_comment_check($comment)
         }
         $path = plugin_dir_url(__file__) . 'images/' . $path;
         $replace = '<img src="' . $path . '">';
+        global $wpdb;
+        if (current_user_can('moderate_comments'))
+        {
+            $table_name = $wpdb->prefix . "imagements_reports";
+            $sql = "
+            SELECT id
+            FROM $table_name
+            WHERE image_name = '$keyword'
+            ";
+            $wpdb->get_var($sql);
+            if ($result == null)
+            {
+                $replace = $replace . '<br><form method="post" action="' . '' .
+                    '"><input type="hidden" name="image_name" value="' . $keyword .
+                    '"><input type="hidden" name="comment_id" value="' . $comment->comment_ID .
+                    '"><input type="submit" value="' . __('Block image') . '"></form>';
+            } else
+            {
+                $replace = $replace . __('image reported');
+            }
+        } else
+        {
+            $replace = $replace . '<br><form method="post" action="' . '' .
+                '"><input type="hidden" name="image_name" value="' . $keyword .
+                '"><input type="hidden" name="comment_id" value="' . $comment->comment_ID .
+                '"><input type="submit" value="' . __('Report') . '"></form>';
+        }
         $search = '[afbeelding=' . $keyword . ']';
-        $comment = str_replace($search, $replace, $comment);
+        $comment_content = str_replace($search, $replace, $comment_content);
     }
-    return $comment;
+    return $comment_content;
 }
 
 function imagements_init()
 {
     add_option('max_height', 300);
     add_option('max_width', 300);
-    add_option('version', '1.1.0');
     add_option('tag', 'afbeelding');
-    
+    add_option('version', '1.2.0');
+
     global $wpdb;
     $table_name = $wpdb->prefix . "imagements";
 
@@ -204,16 +259,29 @@ function imagements_init()
 
     require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql);
-}
 
+    $table_name = $wpdb->prefix . "imagements_reports";
+    $sql = "CREATE TABLE $table_name (
+    id mediumint(9) NOT NULL AUTO_INCREMENT,
+    image_name text NOT NULL,
+    comment_id int NOT NULL,
+    UNIQUE KEY id (id)
+    );";
+
+    require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+}
 
 function imagements_uninstall()
 {
     global $wpdb;
     $table_name = $wpdb->prefix . "imagements";
     $wpdb->query("DROP TABLE IF EXISTS $table_name");
+    $table_name = $wpdb->prefix . "imagements_reports";
+    $wpdb->query("DROP TABLE IF EXISTS $tablename");
     delete_option('max_height');
     delete_option('max_width');
+    delete_option('tag');
 }
 
 ?>
