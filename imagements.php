@@ -45,10 +45,19 @@ function imagements_check_form_input()
 {
     if (isset($_POST['image_name']) && isset($_POST['comment_id']))
     {
-
+        global $wpdb;
+        $table_name = $wpdb->prefix . "imagements";
         if (current_user_can('moderate_comments'))
         {
-
+            global $wpdb;
+            $table_name = $wpdb->prefix . "imagements";
+            $image_name = $_POST['image_name'];
+            $sql = "UPDATE $table_name
+            SET blocked='yes'
+            WHERE naam = '$image_name'
+            ";
+            $wpdb->query($sql);
+            wp_die(__('image blocked. Go <a href="javascript:history.back()">back</a> where you came from. If you dont see the block, please refresh the page.<br>Remember: the image is not yet deleted from the server, go to dashboard->imagements reports to remove the image. You can also unblock the image there.'));
         } else
         {
             global $wpdb;
@@ -62,11 +71,13 @@ function imagements_check_form_input()
             if ($result == null)
             {
                 $sql = "INSERT INTO $table_name
-        VALUES (NULL, '" . $wpdb->prepare($_POST['image_name']) . "', '" . $wpdb->
-                    prepare($_POST['comment_id']) . "'
+        VALUES (NULL, '" . $wpdb->prepare($_POST['image_name']) . "', '" . $wpdb->prepare($_POST['comment_id']) . "'
         );";
                 $wpdb->query($sql);
-                wp_die(__('image reported, an admin will look at the case as soon as possible'));
+                wp_die(__('image reported, an admin will look at the case as soon as possible. Go <a href="javascript:history.back()">back</a> where you came from.'));
+            } else
+            {
+                wp_die(__('image already reported, an admin will look at it as soon as possible. Go <a href="javascript:history.back()">back</a> where you came from.'));
             }
         }
     }
@@ -90,16 +101,14 @@ function imagements_formverwerking()
     {
         $name = $_FILES['image']['name'];
         move_uploaded_file($_FILES["image"]["tmp_name"], __DIR__ . '/images/' . $name);
-        if (!imagements_resize_image(__DIR__ . '/images/' . $name, 0, 1, get_option('max_width'),
-            get_option('max_height')))
+        if (!imagements_resize_image(__DIR__ . '/images/' . $name, 0, 1, get_option('max_width'), get_option('max_height')))
         {
             wp_die(__('error in resizing image, hit the back button and try again. <br> if problem persist contact site admin'));
         }
         global $wpdb;
         $table_name = $wpdb->prefix . 'imagements';
         $sql = "INSERT INTO $table_name
-        VALUES (NULL, '" . $wpdb->prepare($_POST['naam']) . "', '" . $wpdb->
-            prepare($_FILES['image']['name']) . "', 'no') 
+        VALUES (NULL, '" . $wpdb->prepare($_POST['naam']) . "', '" . $wpdb->prepare($_FILES['image']['name']) . "', 'no') 
         ";
         $wpdb->query($sql);
 
@@ -123,13 +132,10 @@ function imagements_verify_post_data($commentdata)
             {
                 if ($_FILES["file"]["error"] > 0)
                 {
-                    wp_die(__('file Error: ' . $_FILES['image']['error'] .
-                        ' Hit the Back button on your Web browser and try again'));
+                    wp_die(__('file Error: ' . $_FILES['image']['error'] . ' Hit the Back button on your Web browser and try again'));
                 } else
                 {
-                    if (!($_FILES['image']['type'] == 'image/x-png' || $_FILES['image']['type'] ==
-                        'image/pjpeg' || $_FILES['image']['type'] == 'image/jpeg' || $_FILES['image']['type'] ==
-                        'image/jpg' || $_FILES['image']['type'] == 'image/png'))
+                    if (!($_FILES['image']['type'] == 'image/x-png' || $_FILES['image']['type'] == 'image/pjpeg' || $_FILES['image']['type'] == 'image/jpeg' || $_FILES['image']['type'] == 'image/jpg' || $_FILES['image']['type'] == 'image/png'))
                     {
                         wp_die(__('this file is no image. Hit the Back button on your Web browser and try again'));
                     } else
@@ -164,13 +170,10 @@ function imagements_verify_post_data($commentdata)
 
 function imagements_additional_fields()
 {
-    echo '<p>' . '<label for="checkbox">' . __('upload image') . '</label>' .
-        '<input id="checkbox" name="checkbox" type="checkbox" value ="yes"/></p>';
-    echo '<p>' . '<label for="naam">' . __('name image') . '</label>' .
-        '<input id="naam" name="naam" type="text"/></p>';
+    echo '<p>' . '<label for="checkbox">' . __('upload image') . '</label>' . '<input id="checkbox" name="checkbox" type="checkbox" value ="yes"/></p>';
+    echo '<p>' . '<label for="naam">' . __('name image') . '</label>' . '<input id="naam" name="naam" type="text"/></p>';
 
-    echo '<p>' . '<label for="image">' . __('file image') . '</label>' .
-        '<input id="image" name="image" type="file"/></p>';
+    echo '<p>' . '<label for="image">' . __('file image') . '</label>' . '<input id="image" name="image" type="file"/></p>';
 }
 
 function imagements_comment_check()
@@ -188,50 +191,53 @@ function imagements_comment_check()
 
     while ($pos = stripos($comment_content, $start, $pos))
     {
+        global $wpdb;
         $str = substr($comment->comment_content, $pos);
         $str_two = substr($str, strlen($start));
         $second_pos = stripos($str_two, $end);
         $str_three = substr($str_two, 0, $second_pos);
-        // $keyword = trim($str_three); // remove whitespaces
         $keyword = $str_three;
         $sql = "
-        SELECT path
+        SELECT path, blocked
         FROM $table_name
         WHERE naam = '$keyword'
         ";
-        $path = $wpdb->get_var($sql);
-        if ($path == null)
+        $result = $wpdb->get_row($sql);
+        if ($result->path == null)
         {
             $path = 'notfound.gif';
+        } elseif ($result->blocked == 'yes')
+        {
+            $path = 'blocked.gif';
+        } else
+        {
+            $path = $result->path;
         }
         $path = plugin_dir_url(__file__) . 'images/' . $path;
         $replace = '<img src="' . $path . '">';
-        global $wpdb;
-        if (current_user_can('moderate_comments'))
+
+        if (!($result->blocked == 'yes'))
         {
-            $table_name = $wpdb->prefix . "imagements_reports";
-            $sql = "
+            if (!current_user_can('moderate_comments'))
+            {
+                $table_name = $wpdb->prefix . "imagements_reports";
+                $sql = "
             SELECT id
             FROM $table_name
             WHERE image_name = '$keyword'
             ";
-            $wpdb->get_var($sql);
-            if ($result == null)
-            {
-                $replace = $replace . '<br><form method="post" action="' . '' .
-                    '"><input type="hidden" name="image_name" value="' . $keyword .
-                    '"><input type="hidden" name="comment_id" value="' . $comment->comment_ID .
-                    '"><input type="submit" value="' . __('Block image') . '"></form>';
+                $result = $wpdb->get_var($sql);
+                if ($result == null)
+                {
+                    $replace = $replace . '<br><form method="post" action="' . '' . '"><input type="hidden" name="image_name" value="' . $keyword . '"><input type="hidden" name="comment_id" value="' . $comment->comment_ID . '"><input type="submit" value="' . __('report image') . '"></form>';
+                } else
+                {
+                    $replace = $replace . __('<br>image reported');
+                }
             } else
             {
-                $replace = $replace . __('image reported');
+                $replace = $replace . '<br><form method="post" action="' . '' . '"><input type="hidden" name="image_name" value="' . $keyword . '"><input type="hidden" name="comment_id" value="' . $comment->comment_ID . '"><input type="submit" value="' . __('block image') . '"></form>';
             }
-        } else
-        {
-            $replace = $replace . '<br><form method="post" action="' . '' .
-                '"><input type="hidden" name="image_name" value="' . $keyword .
-                '"><input type="hidden" name="comment_id" value="' . $comment->comment_ID .
-                '"><input type="submit" value="' . __('Report') . '"></form>';
         }
         $search = '[afbeelding=' . $keyword . ']';
         $comment_content = str_replace($search, $replace, $comment_content);
