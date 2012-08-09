@@ -36,12 +36,37 @@ add_action('comment_post', 'imagements_formverwerking');
 add_filter('preprocess_comment', 'imagements_verify_post_data');
 add_action('admin_menu', 'imagements_admin_add_page');
 add_action('admin_init', 'imagements_admin_init');
-add_action('init', 'imagements_check_form_input');
+add_action('init', 'imagements_check_report_form_input');
+add_action('init', 'imagements_check_admin_reports_form_input');
+add_action('init', 'imagements_version_check');
 
 require __DIR__ . '/img_resize_function.php';
 require __DIR__ . '/options.php';
 
-function imagements_check_form_input()
+function imagements_version_check()
+{
+    if (!(get_option('version') == '1.2.0'))
+    {
+        $table_name = $wpdb->prefix . "imagements_reports";
+        $sql = "CREATE TABLE $table_name (
+    id mediumint(9) NOT NULL AUTO_INCREMENT,
+    image_name text NOT NULL,
+    comment_id int NOT NULL,
+    UNIQUE KEY id (id)
+    );";
+
+        require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+        dbDelta($sql);
+
+        add_option('version', '1.2.0');
+        update_option('version', '1.2.0');
+        add_option('max_height_thumb', 300);
+        add_option('max_width_thumb', 300);
+        add_option('tag', 'afbeelding');
+    }
+}
+
+function imagements_check_report_form_input()
 {
     if (isset($_POST['image_name']) && isset($_POST['comment_id']))
     {
@@ -229,7 +254,21 @@ function imagements_comment_check()
                 $result = $wpdb->get_var($sql);
                 if ($result == null)
                 {
-                    $replace = $replace . '<br><form method="post" action="' . '' . '"><input type="hidden" name="image_name" value="' . $keyword . '"><input type="hidden" name="comment_id" value="' . $comment->comment_ID . '"><input type="submit" value="' . __('report image') . '"></form>';
+                    global $wpdb;
+                    $table_name = $wpdb->prefix . 'imagements';
+                    $sql = "
+                    SELECT blocked
+                    FROM $table_name
+                    WHERE naam = '$keyword'
+                    ";
+                    $status = $wpdb->get_var($sql);
+                    if ($status == 'approved')
+                    {
+                        $replace = $replace . __('<br>image approved by admin');
+                    } else
+                    {
+                        $replace = $replace . '<br><form method="post" action="' . '' . '"><input type="hidden" name="image_name" value="' . $keyword . '"><input type="hidden" name="comment_id" value="' . $comment->comment_ID . '"><input type="submit" value="' . __('report image') . '"></form>';
+                    }
                 } else
                 {
                     $replace = $replace . __('<br>image reported');
@@ -251,6 +290,8 @@ function imagements_init()
     add_option('max_width', 300);
     add_option('tag', 'afbeelding');
     add_option('version', '1.2.0');
+    add_option('max_height_thumb', 300);
+    add_option('max_width_thumb', 300);
 
     global $wpdb;
     $table_name = $wpdb->prefix . "imagements";

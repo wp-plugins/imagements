@@ -1,8 +1,7 @@
 <?php
 
-function imagements_resize_image($img, $percent, $constrain, $w, $h)
+function imagements_calculate_size($img, $percent, $constrain, $w, $h)
 {
-    header("Content-type: image/jpeg");
     // get image size of img
     $x = @getimagesize($img);
     // image width
@@ -49,7 +48,23 @@ function imagements_resize_image($img, $percent, $constrain, $w, $h)
             }
         }
     }
+    $result = array(
+    'w' => $w,
+    'h' => $h,
+    'sw' => $sw,
+    'sh' => $sh,
+    );
+    return $result;
+}
 
+function imagements_resize_image($img, $percent, $constrain, $w, $h)
+{
+    $size = imagements_calculate_size($img, $percent, $constrain, $w, $h);
+    $w = $size['w'];
+    $h = $size['h'];
+    $sw = $size['sw'];
+    $sh = $size['sh'];
+    
     $im = @ImageCreateFromJPEG($img) or // Read JPEG Image
         $im = @ImageCreateFromPNG($img) or // or PNG Image
         $im = @ImageCreateFromGIF($img) or // or GIF Image
@@ -66,7 +81,7 @@ function imagements_resize_image($img, $percent, $constrain, $w, $h)
         $thumb = @ImageCreateTrueColor($w, $h);
         // Copy from image source, resize it, and paste to image destination
         @ImageCopyResampled($thumb, $im, 0, 0, 0, 0, $w, $h, $sw, $sh);
-        // Output resized image   
+        // Output resized image
         @ImageJPEG($thumb, $img);
         return true;
     }
