@@ -12,18 +12,19 @@ Let users use images in the comment section!
 == Description ==
 
 This plugin will:
-* let users upload and put in comments images.
-* let users report images wich they think is inappropriate.
-* let admins moderate images and block them.
-* offer 2 systems to put insert the images in a comment. (auto = image will be automaticly inserted at end of comment, user = user will have to insert the tag for image anywhere he/she likes in the comment)
-* is fully localized and ready for translation.
-* be updated reguraly with new features
-
+<ul>
+<li>let users upload and put in comments images.</li>
+<li>let users report images wich they think is inappropriate.</li>
+<li>let admins moderate images and block them.</li>
+<li>offer 2 systems to put insert the images in a comment. (auto = image will be automaticly inserted at end of comment, user = user will have to insert the tag for image anywhere he/she likes in the comment)</li>
+<li>is fully localized and ready for translation.</li>
+<li>be updated reguraly with new features</li>
+</ul>
 If you want to see a certain function in this plugin, please email me(the author) at williewonka341@gmail.com
 
 <b>newest update:</b>
 
-update 1.2.1 is done! Now the admin can choose to skip the tag part, if the tag use setting is set to auto the plugin will automaticly insert the image at the end of the comment if the users uploads one.
+<u>update 1.2.1 is done!</u> Now the admin can choose to skip the tag part, if the tag use setting is set to auto the plugin will automaticly insert the image at the end of the comment if the users uploads one.
 When this setting is activated the user will no longer be able to give a name to the image, it will just insert the filename as name.
 Furthermore the plugin will now check the hashes of images so that it is no longer possible to upload the same image twice if it has a different filename.
 And last but not least the bug with the tag is finally resolved! you can now choose in the imagements general options menu the tag you want the plugin to use. Please note that the plugin will not automaticly update the comments to the new tag.
