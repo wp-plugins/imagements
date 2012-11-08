@@ -1,0 +1,176 @@
+# Copyright (C) 2012 imagements
+# This file is distributed under the same license as the imagements package.
+msgid ""
+msgstr ""
+"Project-Id-Version: imagements 1.2.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/imagements\n"
+"POT-Creation-Date: 2012-08-09 15:52:39+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2012-MO-DA HO:MI+ZONE\n"
+"Last-Translator: williewonka williewonka341@gmail.com\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: imagements.php:85
+msgid ""
+"image blocked. Go <a href=\"javascript:history.back()\">back</a> where you "
+"came from. If you dont see the block, please refresh the page.<br>Remember: "
+"the image is not yet deleted from the server, go to dashboard->imagements "
+"reports to remove the image. You can also unblock the image there."
+msgstr "Afbeelding geblokkeerd. Ga <a href=\"javascript:history.back()\">hier</a>
+
+#: imagements.php:102
+msgid ""
+"image reported, an admin will look at the case as soon as possible. Go <a "
+"href=\"javascript:history.back()\">back</a> where you came from."
+msgstr ""
+
+#: imagements.php:105
+msgid ""
+"image already reported, an admin will look at it as soon as possible. Go <a "
+"href=\"javascript:history.back()\">back</a> where you came from."
+msgstr ""
+
+#: imagements.php:131
+msgid ""
+"error in resizing image, hit the back button and try again. <br> if problem "
+"persist contact site admin"
+msgstr ""
+
+#: imagements.php:150
+msgid ""
+"no file was specified. Hit the Back button on your Web browser and try agian"
+msgstr ""
+
+#: imagements.php:155
+msgid "no name was specified. Hit the Back button and try agian."
+msgstr ""
+
+#: imagements.php:165
+msgid ""
+"this file is no image. Hit the Back button on your Web browser and try again"
+msgstr ""
+
+#: imagements.php:178
+msgid ""
+"this name is already in use. Hit the Back button and choose a new unique one"
+msgstr ""
+
+#: imagements.php:184
+msgid ""
+"this filename already exists on our server. please rename the file and try "
+"againg"
+msgstr ""
+
+#: imagements.php:198
+msgid "upload image"
+msgstr ""
+
+#: imagements.php:199
+msgid "name image"
+msgstr ""
+
+#: imagements.php:201
+msgid "file image"
+msgstr ""
+
+#: imagements.php:267
+msgid "<br>image approved by admin"
+msgstr ""
+
+#: imagements.php:270
+msgid "report image"
+msgstr ""
+
+#: imagements.php:274
+msgid "<br>image reported"
+msgstr ""
+
+#: imagements.php:278 options.php:216
+msgid "block image"
+msgstr ""
+
+#: options.php:11
+msgid "imagements general options menu"
+msgstr ""
+
+#: options.php:11
+msgid "imagements general"
+msgstr ""
+
+#: options.php:12 options.php:152
+msgid "imagements reports"
+msgstr ""
+
+#: options.php:24
+msgid "maximum width in pixels: "
+msgstr ""
+
+#: options.php:25
+msgid "maximum height in pixels: "
+msgstr ""
+
+#: options.php:26
+msgid "maximum width for thumbnails in pixels: "
+msgstr ""
+
+#: options.php:27
+msgid "maximum height for thumbnails in pixels: "
+msgstr ""
+
+#: options.php:221 options.php:302
+msgid "approve image"
+msgstr ""
+
+#: options.php:226 options.php:307
+msgid "delete image"
+msgstr ""
+
+#: options.php:233 options.php:314
+msgid "Apply"
+msgstr ""
+
+#: options.php:241
+msgid "blocked images"
+msgstr ""
+
+#: options.php:249
+msgid "checkbox"
+msgstr ""
+
+#: options.php:253
+msgid "name blocked image"
+msgstr ""
+
+#: options.php:257
+msgid "blocked image"
+msgstr ""
+
+#: options.php:297
+msgid "unblock image"
+msgstr ""
+
+#: options.php:367
+msgid "<p>here you can set the settings of the imagements plugin</p>"
+msgstr ""
+
+#: options.php:385
+msgid "Save Changes"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "imagements"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "this plugin lets your users put images in comments."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "williewonka"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.deweblogvanhelmond.nl"
+msgstr ""
