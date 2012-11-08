@@ -46,6 +46,7 @@ upcoming updates:
 
 known bugs:
 <ul>
+<li>when there is no other text in the comment, the image will not appear</li>
 <li>when the tag is changed the comments are not automaticly updated</li>
 <li>no email notification yet for the report image system</li>
 </ul>
