@@ -15,16 +15,18 @@ function imagements_admin_add_page()
 function imagements_admin_init()
 {
     add_settings_section('imagements_main', 'imagements', 'imagements_general_section_text', 'imagements');
-    //register_setting('imagements_options', 'tag');
+    register_setting('imagements_options', 'tag');
     register_setting('imagements_options', 'max_width', 'imagements_general_options_validate');
     register_setting('imagements_options', 'max_height', 'imagements_general_options_validate');
     register_setting('imagements_options', 'max_width_thumb', 'imagements_general_options_validate');
     register_setting('imagements_options', 'max_height_thumb', 'imagements_general_options_validate');
-    //add_settings_field('tag', __('the tag used to insert an image: '), 'imagements_option_tag', 'imagements', 'imagements_main');
+    register_setting('imagements_options', 'tag_use');
+    add_settings_field('tag', __('the tag used to insert an image: '), 'imagements_option_tag', 'imagements', 'imagements_main');
     add_settings_field('max_width', __('maximum width in pixels: '), 'imagements_option_width', 'imagements', 'imagements_main');
     add_settings_field('max_height', __('maximum height in pixels: '), 'imagements_option_height', 'imagements', 'imagements_main');
     add_settings_field('max_width_thumb', __('maximum width for thumbnails in pixels: '), 'imagements_option_width_thumb', 'imagements', 'imagements_main');
     add_settings_field('max_height_thumb', __('maximum height for thumbnails in pixels: '), 'imagements_option_height_thumb', 'imagements', 'imagements_main');
+    add_settings_field('tag_use', __('How the tag is used, by user or automaticly: '), 'imagements_option_tag_use', 'imagements', 'imagements_main');
 }
 
 function imagements_check_admin_reports_form_input()
@@ -81,7 +83,7 @@ function imagements_check_admin_reports_form_input()
                         WHERE naam = '$image_name'
                         ";
                         $path = $wpdb->get_var($sql);
-                        $path = __DIR__ . '/images/' . $path;
+                        $path = __dir__ . '/images/' . $path;
                         $sql = "
                         DELETE FROM $table_name
                         WHERE naam = '$image_name'
@@ -128,7 +130,7 @@ function imagements_check_admin_reports_form_input()
                         WHERE id = '$id'
                         ";
                         $path = $wpdb->get_var($sql);
-                        $path = __DIR__ . '/images/' . $path;
+                        $path = __dir__ . '/images/' . $path;
                         $sql = "
                         DELETE FROM $table_name
                         WHERE id = '$id'
@@ -329,6 +331,26 @@ function imagements_general_options_validate($input)
         $input = 300;
     }
     return $input;
+}
+
+function imagements_option_tag_use()
+{
+    $option = get_option('tag_use');
+    if ($option == 'auto')
+    {
+        echo "<select id='tag_use' name = 'tag_use'>
+        <option value='auto'>auto</option>
+        <option value='user'>user</option>
+        </select>
+        ";
+    } elseif ($option == 'user')
+    {
+        echo "<select id='tag_use' name = 'tag_use'>
+        <option value='user'>user</option>
+        <option value='auto'>auto</option>
+        </select>
+        ";
+    }
 }
 
 function imagements_option_width_thumb()
