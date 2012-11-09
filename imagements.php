@@ -144,7 +144,7 @@ function imagements_deac() //this function clears some options when the plugin i
 
 function imagements_formverwerking() //this function handles the file uploading from the comment form
 {
-    $count = count($_FILES);
+    $count = count($_FILES['image']['name']);
     if ($count != 0)
     {
         for ($i = 0; $i < $count; $i++)
@@ -171,7 +171,7 @@ function imagements_edit_comment($comment) //this function adds a tag automaticl
 {
     $option = get_option('tag_use');
     $tag = get_option('tag');
-    $count = count($_FILES);
+    $count = count($_FILES['image']['name']);
 
     if ($option == 'auto' && $count != 0)
     {
@@ -187,7 +187,7 @@ function imagements_edit_comment($comment) //this function adds a tag automaticl
 function imagements_verify_post_data($commentdata) //this function checks if the input in the comment form is valid for this plugin
 {
     $option = get_option('tag_use');
-    $count_images = count($_FILES);
+    $count_images = count($_FILES['image']['name']);
     if ($count_images != 0)
     {
         for ($i = 0; $i < $count_images; $i++)
@@ -265,11 +265,14 @@ function imagements_additional_fields() //this function adds fields to the comme
     $option = get_option('tag_use');
     if ($option == 'user')
     {
-        $fields = '<p>' . '<label for="naam">' . __('name image') . '</label>' . '<input id="naam" name="naam[]" type="text"/></p>';
+        $fields = 1;
+        echo '<p><label for="naam">' . __('name image') . '</label><input id="name_image" name="naam[]" type="text"/></p>';
+    }else{
+        $fields = 0;
     }
-    $fields = $fields . '<p>' . '<label for="image">' . __('file image') . '</label>' . '<input id="image" name="image[]" type="file"/></p>';
-    echo $fields;
-    echo "<p><input type='button' id='extra_field' value='extra image upload field' onClick='extend($fields)'></p>";
+    echo '<p><label for="image">' . __('file image') . '</label><input id="image" name="image[]" type="file"/></p>';
+    
+    echo "<p><input type='button' id='extra_field' value='extra image upload field' onClick=extend('$fields')></p>";
 }
 
 function imagements_comment_check() //this function check every comment to see if an image has to be inserted and if so handles this
