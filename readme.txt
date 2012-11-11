@@ -3,7 +3,7 @@ Contributors: williewonka, dc5ala
 Tags: image, in, comments, images, comment
 Requires at least: 3.4.1
 Tested up to: 3.4.2
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,39 +18,20 @@ This plugin will:
 <li>let admins moderate images and block them.</li>
 <li>offer 2 systems to put insert the images in a comment. (auto = image will be automaticly inserted at end of comment, user = user will have to insert the tag for image anywhere he/she likes in the comment)</li>
 <li>is fully localized and ready for translation.</li>
-<li>be updated reguraly with new features</li>
 </ul>
 If you want to see a certain function in this plugin, please email me(the author) at williewonka341@gmail.com
 
 <b>newest update:</b>
+
+<u>update 1.2.2 is live!</u> Only some small bugfixes this time, see changelog for more information. no new features.
 
 <u>update 1.2.1 is done!</u> Now the admin can choose to skip the tag part, if the tag use setting is set to auto the plugin will automaticly insert the image at the end of the comment if the users uploads one.
 When this setting is activated the user will no longer be able to give a name to the image, it will just insert the filename as name.
 Furthermore the plugin will now check the hashes of images so that it is no longer possible to upload the same image twice if it has a different filename.
 And last but not least the bug with the tag is finally resolved! you can now choose in the imagements general options menu the tag you want the plugin to use. Please note that the plugin will not automaticly update the comments to the new tag.
 
-upcoming updates:
-<ul>
-<li>configurable options such as:</li>
-<ol>
-<li>the tag users use in comments</li>
-<li>what types of images are allowed</li>
-<li>the folder where the images will be put on your server (it now uses the plugin folder as default)</li>
-</ol>
-<li>more languages (im dutch so that one will come shortly)</li>
-<li>fixes for the known bugs</li>
-<li>and much more if someone requests it</li>
-<li>the option to upload and insert multiple images at the same time</li>
-<li>system that images need to be seen by admin first before they are seen publicly</li>
-</ul>
 
-known bugs:
-<ul>
-<li>when there is no other text in the comment, the image will not appear</li>
-<li>when the tag is changed the comments are not automaticly updated</li>
-<li>no email notification yet for the report image system</li>
-</ul>
-<b>if you find any bugs, please mail me at williewonka341@gmail.com
+if you find any bugs, please mail me at williewonka341@gmail.com
 
 == Installation ==
 1. upload the imagements folder to wp-content/plugins
@@ -68,10 +49,14 @@ image and commments put together = imagements
 
 email me at williewonka341@gmail.com and i wil try to fix it as soon as possible
 
+= I would like to see feature x in this plugin/ i have this great idea y for this plugin =
+
+email me the idea at williewonka341@gmail.com and i will see if i can implement it.
+
 = how do I use this plugin? =
 
-a user has to tick the checkbox in the comment form and choose a name for the image and choose a file. you can then use the tag [image=insert choosen image name here] in the comment or if you have set the automatic system in the options the plugin will automaticly insert the image at the end of a comment.
-The plugin will automaticly insert the proper image html tag in the comment when someone views the comments.
+Their are 2 ways a user can use this plugin. The first method is when the tag use is set to user. In this method the user specifies a file and name for the image and then inserts the tag (default [image=~name~]) anywhere in the comment to use the image.
+The second method is when the tag use is set to auto. In this method the users only specifies a file and the image is automaticly inserted at the end of the comment.
 
 = I have multiple errors when i try to use the plugin = 
 
@@ -79,10 +64,16 @@ Try to deactivate and reactivate the plugin. If this doesn't fix it, then email 
 
 == Screenshots ==
 
-1. screen showing the upload form
-2. screen showing the image in a comment
+1. example of images in comments
+2. the commentform with the upload image field
+3. the options menu on the dashboard
 
 == Changelog ==
+
+= 1.2.2 =
+* FIXED: when there is no text in comment, plugin will insert the word 'image' so that the image is still displayed
+* FIXED: some small security things and better flow of code.
+* FIXED: updated screenshots and FAQ
 
 = 1.2.1 =
 * ADDED: option to skip the tag, plugin will no automaticly input the image tag at the end of a comment
@@ -105,6 +96,9 @@ Try to deactivate and reactivate the plugin. If this doesn't fix it, then email 
 * first version
 
 == Upgrade Notice ==
+
+= 1.2.2 =
+* please upgrade to this version to clear out some bugs and security isues
 
 = 1.2.1 =
 * please read the readme for the latest change and choose if you want automaticly or user tag input.
