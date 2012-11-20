@@ -15,7 +15,7 @@ function imagements_admin_add_page()
 function imagements_admin_init()
 {
     add_settings_section('imagements_main', 'imagements', 'imagements_general_section_text', 'imagements');
-    register_setting('imagements_options', 'tag');
+    register_setting('imagements_options', 'tag', 'imagements_tag_replacement');
     register_setting('imagements_options', 'max_width', 'imagements_general_options_validate');
     register_setting('imagements_options', 'max_height', 'imagements_general_options_validate');
     register_setting('imagements_options', 'max_width_thumb', 'imagements_general_options_validate');
@@ -27,6 +27,26 @@ function imagements_admin_init()
     add_settings_field('max_width_thumb', __('maximum width for thumbnails in pixels: '), 'imagements_option_width_thumb', 'imagements', 'imagements_main');
     add_settings_field('max_height_thumb', __('maximum height for thumbnails in pixels: '), 'imagements_option_height_thumb', 'imagements', 'imagements_main');
     add_settings_field('tag_use', __('How the tag is used, by user or automaticly: '), 'imagements_option_tag_use', 'imagements', 'imagements_main');
+}
+
+function imagements_tag_replacement($input){
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'comments';
+    $tag = get_option('tag');
+    $sql =  "SELECT comment_content, comment_ID
+            FROM $table_name
+            WHERE comment_content LIKE '%[$tag=%'
+            ";
+    $data = $wpdb->get_results($sql);
+    foreach($data as $comment){
+        $new_comment = str_replace("[$tag=","[$input=",$comment->comment_content);
+    $sql =  "UPDATE $table_name
+            SET comment_content='$new_comment'
+            WHERE comment_ID = '$comment->comment_ID'
+            ";
+    $wpdb->query($sql);
+    }
+    return $input;
 }
 
 function imagements_check_admin_reports_form_input()
@@ -154,18 +174,22 @@ function imagements_reports_form()
     echo __('imagements reports');
 
 ?></h2>
+<?php
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'imagements_reports';
+    $sql = "
+    SELECT *
+    FROM $table_name
+    ";
+    $results = $wpdb->get_results($sql);
+    if($results == NULL){
+        echo __('No reports to show!');
+    }else{
+?>
 <form method="post" action="">
 <table border="4">
 <tr><td><b>checkbox</b></td><td><b>comment</b></td><td><b>image</b></td><td><b>author</b></td></tr>
 <?php
-
-    global $wpdb;
-    $table_name = $wpdb->prefix . 'imagements_reports';
-    $sql = "
-SELECT *
-FROM $table_name
-";
-    $results = $wpdb->get_results($sql);
     foreach ($results as $data)
     {
         $naam = $data->image_name;
@@ -238,11 +262,25 @@ FROM $table_name
 ?>" /></td></tr>	
 </table>
 </form>
+<?php } ?>
 <h2><?php
 
     echo __('blocked images');
 
 ?></h2>
+<?php
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'imagements';
+    $sql = "
+    SELECT id, naam, path
+    FROM $table_name
+    WHERE blocked = 'yes'
+    ";
+    $result = $wpdb->get_results($sql);
+    if($result == NULL){
+        echo __('No blocked images to show!');
+    }else{
+?>
 </div>
 <form method="post" action="">
 <table border="3">
@@ -260,15 +298,6 @@ FROM $table_name
 
 ?></b></td></tr>
 <?php
-
-    global $wpdb;
-    $table_name = $wpdb->prefix . 'imagements';
-    $sql = "
-SELECT id, naam, path
-FROM $table_name
-WHERE blocked = 'yes'
-";
-    $result = $wpdb->get_results($sql);
     foreach ($result as $data)
     {
         $path = plugin_dir_url(__file__) . 'images/' . $data->path;
@@ -321,7 +350,7 @@ WHERE blocked = 'yes'
 </table>
 </form>
 <?php
-
+    }
 }
 
 function imagements_general_options_validate($input)

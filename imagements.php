@@ -3,7 +3,7 @@
 /*
 Plugin Name: imagements
 Description: this plugin lets your users put images in comments.
-Version: 1.2.2
+Version: 1.2.3
 Author: williewonka
 Author URI: http://www.deweblogvanhelmond.nl
 License: GPL2
@@ -39,11 +39,20 @@ add_action('admin_init', 'imagements_admin_init');
 add_action('init', 'imagements_check_report_form_input');
 add_action('init', 'imagements_check_admin_reports_form_input');
 add_action('init', 'imagements_version_check');
-add_filter('pre_comment_content', 'imagements_edit_comment');
+add_action('pre_comment_on_post', 'imagements_edit_comment');
 
 require __dir__ . '/img_resize_function.php';
 require __dir__ . '/options.php';
-define("VERSION", "1.2.2");
+define("VERSION", "1.2.3");
+
+function imagements_edit_comment(){
+    $option = get_option('tag_use');
+    $tag = get_option('tag');
+    if ($option == 'auto' && isset($_POST['checkbox']))
+    {
+        $_POST['comment'] = $_POST['comment'] . '<br><br>[' . $tag . '=' . $_FILES['image']['name'] . ']';
+    }
+}
 
 function imagements_version_check() //this function checks if the database is up to date with the latest format
 {
@@ -52,6 +61,8 @@ function imagements_version_check() //this function checks if the database is up
         imagements_init();
         update_option('version', VERSION);
     }
+    
+    
 }
 
 function imagements_check_report_form_input() //this function checks if there has been input from the report button and if so handles it
@@ -127,23 +138,6 @@ function imagements_formverwerking() //this function handles the file uploading 
         $wpdb->query($sql);
 
     }
-}
-
-function imagements_edit_comment($comment) //this function adds a tag automaticly if it is set in options
-{
-    $option = get_option('tag_use');
-    $tag = get_option('tag');
-    
-     if($comment == NULL && $count != 0){
-        $comment = __('image<br>');
-    }
-
-    if ($option == 'auto' && isset($_POST['checkbox']))
-    {
-        $comment = $comment . '<br><br>[' . $tag . '=' . $_POST['naam'] . ']';
-    }
-
-    return $comment;
 }
 
 
@@ -357,7 +351,7 @@ function imagements_uninstall() //this function cleans everyting up when the plu
     $table_name = $wpdb->prefix . "imagements";
     $wpdb->query("DROP TABLE IF EXISTS $table_name");
     $table_name = $wpdb->prefix . "imagements_reports";
-    $wpdb->query("DROP TABLE IF EXISTS $tablename");
+    $wpdb->query("DROP TABLE IF EXISTS $table_name");
     delete_option('max_height');
     delete_option('max_width');
     delete_option('tag');

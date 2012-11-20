@@ -1,9 +1,9 @@
 === Imagements ===
-Contributors: williewonka, dc5ala
+Contributors: williewonka
 Tags: image, in, comments, images, comment
 Requires at least: 3.4.1
 Tested up to: 3.4.2
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,20 +23,14 @@ If you want to see a certain function in this plugin, please email me(the author
 
 <b>newest update:</b>
 
-<u>update 1.2.2 is live!</u> Only some small bugfixes this time, see changelog for more information. no new features.
-
-<u>update 1.2.1 is done!</u> Now the admin can choose to skip the tag part, if the tag use setting is set to auto the plugin will automaticly insert the image at the end of the comment if the users uploads one.
-When this setting is activated the user will no longer be able to give a name to the image, it will just insert the filename as name.
-Furthermore the plugin will now check the hashes of images so that it is no longer possible to upload the same image twice if it has a different filename.
-And last but not least the bug with the tag is finally resolved! you can now choose in the imagements general options menu the tag you want the plugin to use. Please note that the plugin will not automaticly update the comments to the new tag.
-
+<u>version 1.2.3:</u> when the admin changes the tag, the plugin will now update the comments too. Also fixed is the empty comment, if an user uploads an image without putting text in the comment, it will now show the image if the system is set to automatic tag.
 
 if you find any bugs, please mail me at williewonka341@gmail.com
 
 == Installation ==
 1. upload the imagements folder to wp-content/plugins
 2. activate the plugin through the dashboard under 'plugins'
-3. choose a tag you want to use in the imagements general options under settings on the dashboards, the default one is 'image'
+3. set the options to the desired value on the dashboard, don't forget to do this because the default values don't satisfy everyone
 4. let your users know how to use it (very important!)
 
 == Frequently Asked Questions ==
@@ -70,8 +64,12 @@ Try to deactivate and reactivate the plugin. If this doesn't fix it, then email 
 
 == Changelog ==
 
+= 1.2.3 =
+* FIXED: when the admin changes the tag, the plugin will now update the comments too.
+* FIXED: small graphical bug in admin panel
+* FIXED: when there is no text in a comment but an user uploads an image, the image will be displayed in the comment.
+
 = 1.2.2 =
-* FIXED: when there is no text in comment, plugin will insert the word 'image' so that the image is still displayed
 * FIXED: some small security things and better flow of code.
 * FIXED: updated screenshots and FAQ
 
@@ -96,6 +94,9 @@ Try to deactivate and reactivate the plugin. If this doesn't fix it, then email 
 * first version
 
 == Upgrade Notice ==
+
+= 1.2.3 =
+* bug fix, see changelog
 
 = 1.2.2 =
 * please upgrade to this version to clear out some bugs and security isues
