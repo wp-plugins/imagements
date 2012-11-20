@@ -3,9 +3,10 @@
 /*
 Plugin Name: imagements
 Description: this plugin lets your users put images in comments.
-Version: 1.2.3
+Plugin URI: http://williewonka.site50.net/?page_id=9
+Version: 1.2.4
 Author: williewonka
-Author URI: http://www.deweblogvanhelmond.nl
+Author URI: http://williewonka.site50.net/?page_id=9
 License: GPL2
 */
 
@@ -41,9 +42,11 @@ add_action('init', 'imagements_check_admin_reports_form_input');
 add_action('init', 'imagements_version_check');
 add_action('pre_comment_on_post', 'imagements_edit_comment');
 
-require __dir__ . '/img_resize_function.php';
-require __dir__ . '/options.php';
-define("VERSION", "1.2.3");
+$path_plugin = dirname(__file__);
+
+require "$path_plugin/img_resize_function.php";
+require "$path_plugin/options.php";
+define("VERSION", "1.2.4");
 
 function imagements_edit_comment(){
     $option = get_option('tag_use');

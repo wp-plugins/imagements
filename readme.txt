@@ -1,9 +1,11 @@
 === Imagements ===
 Contributors: williewonka
 Tags: image, in, comments, images, comment
+Plugin URI: http://williewonka.site50.net/?page_id=9
+Author URI: http://williewonka.site50.net/?page_id=9
 Requires at least: 3.4.1
 Tested up to: 3.4.2
-Stable tag: 1.2.3
+Stable tag: 1.2.4
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,7 +24,7 @@ This plugin will:
 If you want to see a certain function in this plugin, please email me(the author) at williewonka341@gmail.com
 
 <b>newest update:</b>
-
+<u>version 1.2.4</u> I have identified a serieus plugin breaking bug wich occures with certain server settings. this is now fixed so that everyone can use this plugin!
 <u>version 1.2.3:</u> when the admin changes the tag, the plugin will now update the comments too. Also fixed is the empty comment, if an user uploads an image without putting text in the comment, it will now show the image if the system is set to automatic tag.
 
 if you find any bugs, please mail me at williewonka341@gmail.com
@@ -64,6 +66,9 @@ Try to deactivate and reactivate the plugin. If this doesn't fix it, then email 
 
 == Changelog ==
 
+= 1.2.4 =
+* FIXED: bug wich occured on servers with certain settings wich would break the plugin.
+
 = 1.2.3 =
 * FIXED: when the admin changes the tag, the plugin will now update the comments too.
 * FIXED: small graphical bug in admin panel
@@ -94,6 +99,8 @@ Try to deactivate and reactivate the plugin. If this doesn't fix it, then email 
 * first version
 
 == Upgrade Notice ==
+= 1.2.4 =
+* if you had an fatal error with the require function, update to this version, this bug is fixed now
 
 = 1.2.3 =
 * bug fix, see changelog
