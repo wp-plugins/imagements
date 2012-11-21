@@ -4,7 +4,7 @@
 Plugin Name: imagements
 Description: this plugin lets your users put images in comments.
 Plugin URI: http://williewonka.site50.net/?page_id=9
-Version: 1.2.4
+Version: 1.2.5
 Author: williewonka
 Author URI: http://williewonka.site50.net/?page_id=9
 License: GPL2
@@ -47,6 +47,7 @@ $path_plugin = dirname(__file__);
 require "$path_plugin/img_resize_function.php";
 require "$path_plugin/options.php";
 define("VERSION", "1.2.4");
+define("PATH", $path_plugin);
 
 function imagements_edit_comment(){
     $option = get_option('tag_use');
@@ -128,8 +129,8 @@ function imagements_formverwerking() //this function handles the file uploading 
     {
         $name = $_FILES['image']['name'];
         $hash = hash_file("md5", $_FILES['image']['tmp_name']);
-        move_uploaded_file($_FILES["image"]["tmp_name"], __dir__ . '/images/' . $name);
-        if (!imagements_resize_image(__dir__ . '/images/' . $name, 0, 1, get_option('max_width'), get_option('max_height')))
+        move_uploaded_file($_FILES["image"]["tmp_name"], PATH . '/images/' . $name);
+        if (!imagements_resize_image(PATH . '/images/' . $name, 0, 1, get_option('max_width'), get_option('max_height')))
         {
             wp_die(__('error in resizing image, hit the back button and try again. <br> if problem persist contact site admin'));
         }
