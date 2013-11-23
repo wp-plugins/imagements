@@ -1,10 +1,8 @@
 === Imagements ===
-Contributors: williewonka
+Contributors: williewonka, dc5ala
 Tags: image, in, comments, images, comment
-Plugin URI: http://williewonka.site50.net/?page_id=9
-Author URI: http://williewonka.site50.net/?page_id=9
-Requires at least: 3.4.1
-Tested up to: 3.4.2
+Requires at least: 3.0.0
+Tested up to: 3.7.1
 Stable tag: 1.2.5
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -15,28 +13,34 @@ Let users use images in the comment section!
 
 This plugin will:
 <ul>
-<li>let users upload and put in comments images.</li>
+<li>let users upload and put in comments images. Multiple images at the same time is supported</li>
 <li>let users report images wich they think is inappropriate.</li>
 <li>let admins moderate images and block them.</li>
 <li>offer 2 systems to put insert the images in a comment. (auto = image will be automaticly inserted at end of comment, user = user will have to insert the tag for image anywhere he/she likes in the comment)</li>
 <li>is fully localized and ready for translation.</li>
 </ul>
-If you want to see a certain function in this plugin, please email me(the author) at williewonka341@gmail.com
+If you want to see a certain function in this plugin, please email me(the author) at williewonka341@gmail.com or open an issue at my github: github.com/williewonka/imagements
 
-<b>newest update:</b>
-<u>version 1.2.5:</u>small bug fix, please update.<br>
-<u>version 1.2.4</u> I have identified a serieus plugin breaking bug wich occures with certain server settings. this is now fixed so that everyone can use this plugin!<br>
-<u>version 1.2.3:</u> when the admin changes the tag, the plugin will now update the comments too. Also fixed is the empty comment, if an user uploads an image without putting text in the comment, it will now show the image if the system is set to automatic tag.<br>
+<b>latest news:<b>
+version 1.3.4 is now available! This version marks the merge of the free and (intended but never published) premium version. This means a ton of new features which include multiple file uploads at the same time, lightbox effects, extensive moderator options and much more.
+WARNING IF YOU ARE UPDATING FROM VERSION 1.2.5 THEN FIRST BACKUP THE UPLOADED IMAGES AND MOVE THEM TO THE WP_CONTENT/IMAGES/ FOLDER. THIS FOLDER NEEDS TO BE CREATED FIRST, if you fail to do this you WILL LOSE ALL YOUR IMAGES
+
+
 
 if you find any bugs, please mail me at williewonka341@gmail.com
 
 == Installation ==
 1. upload the imagements folder to wp-content/plugins
-2. activate the plugin through the dashboard under 'plugins'
-3. set the options to the desired value on the dashboard, don't forget to do this because the default values don't satisfy everyone
-4. let your users know how to use it (very important!)
+2. create an images folder in the wp_content/uploads/ folder
+3. activate the plugin through the dashboard under 'plugins'
+4. set the settings on the dashboard under settings->imagements options to your desired choice. This is very important because the default values will not suit everyone!
+5. let your users know how to use it (very important!)
 
 == Frequently Asked Questions ==
+
+= Where can I moderate images? =
+
+Go to the dashboard and under comments->images in comments you can moderate images
 
 = How did you get the funny name? =
 
@@ -67,18 +71,36 @@ Try to deactivate and reactivate the plugin. If this doesn't fix it, then email 
 
 == Changelog ==
 
-= 1.2.5 =
-* FIXED: plugin breaking bug
+= 1.3.4 =
+* WARNING IF YOU ARE UPDATING FROM VERSION 1.2.5 THEN FIRST BACKUP THE UPLOADED IMAGES AND MOVE THEM TO THE WP_CONTENT/IMAGES/ FOLDER. THIS FOLDER NEEDS TO BE CREATED FIRST, if you fail to do this you WILL LOSE ALL YOUR IMAGES
+* ADDED: lightbox effects on images, can be switched off in options
+* ADDED: free and premium version are merged, the plugin will be continued as one free project and will also be published on github
+* FIXED: images displayed will now of the size specified for the thumbnail and the lightbox image (and on file) will be the size specified under normal size
+* FIXED: fixed a bug where  images uploaded with a space in them would break the plugin
+* FIXED: several security issues (that will not be disclosed)
+* FIXED: update the code to the standard of wordpress version 3.7
+* FIXED: fixed a bug where empty upload fields were not ignored but instead threw an error
 
-= 1.2.4 =
+= 1.3.3 =
+* ADDED: option to specify the uploadfolder
+* ADDED: changed upload to wp_content instead of plugin folder, this way the images arent destroyed when updating
+* FIXED: when comment is empty and tag system is set to auto, the tag is entered and wordpress doesnt reject the comment as empty
+* FIXED: multiple small bugs
 * FIXED: bug wich occured on servers with certain settings wich would break the plugin.
 
-= 1.2.3 =
-* FIXED: when the admin changes the tag, the plugin will now update the comments too.
-* FIXED: small graphical bug in admin panel
-* FIXED: when there is no text in a comment but an user uploads an image, the image will be displayed in the comment.
+= 1.3.2 =
+* ADDED: option to only let members upload images
+* FIXED: when changing tag, comments change too
+
+= 1.3.1 =
+* ADDED: new moderatortools, moderators can now block or delete images
+
+= 1.3.0 =
+* ADDED: users can now upload multiple images in one go up to a limit wich can be set in the option menu.
+* FIXED: when imagename is not found in database, it is no longer possible to report image.
 
 = 1.2.2 =
+* FIXED: when there is no text in comment, plugin will insert the word 'image' so that the image is still displayed
 * FIXED: some small security things and better flow of code.
 * FIXED: updated screenshots and FAQ
 
@@ -104,14 +126,9 @@ Try to deactivate and reactivate the plugin. If this doesn't fix it, then email 
 
 == Upgrade Notice ==
 
-= 1.2.5 =
-* crucial bug fix, please update asap
-
-= 1.2.4 =
-* if you had an fatal error with the require function, update to this version, this bug is fixed now
-
-= 1.2.3 =
-* bug fix, see changelog
+= 1.3.4 =
+* merge of free and premium version, please see changelof for changes
+* WARNING IF YOU ARE UPDATING FROM VERSION 1.2.5 THEN FIRST BACKUP THE UPLOADED IMAGES AND MOVE THEM TO THE WP_CONTENT/IMAGES/ FOLDER. THIS FOLDER NEEDS TO BE CREATED FIRST, if you fail to do this you WILL LOSE ALL YOUR IMAGES
 
 = 1.2.2 =
 * please upgrade to this version to clear out some bugs and security isues

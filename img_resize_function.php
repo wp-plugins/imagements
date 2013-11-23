@@ -3,7 +3,7 @@
 function imagements_calculate_size($img, $percent, $constrain, $w, $h)
 {
     // get image size of img
-    $x = @getimagesize($img);
+    $x = getimagesize($img);
     // image width
     $sw = $x[0];
     // image height
