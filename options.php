@@ -137,8 +137,9 @@ function imagements_act_on_admin_input()
                                     ";
                             $path = $wpdb->get_var($sql);
                             $sql =  "DELETE FROM $table_name
-                                    WHERE naam='$image_name'
+                                    WHERE naam = %s
                                     ";
+                            $sql = $wpdb->prepare($sql, $image_name);
                             $wpdb->query($sql);
                             $path = __dir__ . '/images/' . $path;
                             unlink($path);
@@ -155,8 +156,9 @@ function imagements_change_status($target_column,$target, $status)
     $table_name = $wpdb->prefix . 'imagements';
     $sql = "UPDATE $table_name
             SET status = '$status'
-            WHERE $target_column = '$target'
+            WHERE $target_column = %s
             ";
+    $sql = $wpdb->prepare($sql, $target);
     $wpdb->query($sql);
 }
 

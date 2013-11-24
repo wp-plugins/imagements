@@ -65,8 +65,9 @@ function imagements_check_report_form_input() //this function checks if there ha
             $image_name = $_POST['image_name'];
             $sql = "UPDATE $table_name
             SET status='blocked'
-            WHERE naam = '$image_name'
+            WHERE naam = %s
             ";
+            $sql = $wpdb->prepare($sql, $image_name);
             $wpdb->query($sql);
             wp_die(__('image blocked. Go <a href="javascript:history.back()">back</a> where you came from. If you dont see the block, please refresh the page.<br>Remember: the image is not yet deleted from the server, go to dashboard->imagements reports to remove the image. You can also unblock the image there.'));
         } else
